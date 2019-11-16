@@ -18,6 +18,10 @@
         .enable {
             background: Gray;
         }
+        
+        .none {
+            background-color: white;
+        }
 
         .enable:hover {
             background: Black;
@@ -33,12 +37,16 @@
     <script>
         // 소켓 이벤트를 수행합니다.
         var socket = io.connect('http://127.0.0.1:3000');
+
+        console.log(socket);
+
         // 이벤트를 연결합니다.
         socket.on('reserve', function (data) {
             var $target = $('div[data-x=' + data.x + '][data-y=' + data.y + ']');
             $target.removeClass('enable');
             $target.addClass('disable');
         });
+
     </script>
     <!-- 초기 좌석 생성 -->
     <script>
@@ -57,34 +65,40 @@
                     alert('취소되었습니다.');
                 }
             };
-            // Ajax를 수행합니다.
-            $.getJSON('/seat',function (data) {
 
-                console.log(data);
-                // 좌석을 생성합니다.
-                $.each(data.seats, function (indexY, line) {
-                    // 문서 객체를 생성합니다.
-                    var $line = $('<div></div>').addClass('line');
-                    $.each(line, function (indexX, seat) {
-                        // 문서 객체를 생성하고 변수 $line에 추가합니다.
-                        var $output = $('<div></div>', {
-                            'class': 'seat',
-                            'data-x': indexX,
-                            'data-y': indexY
-                        }).appendTo($line);
-                        if (seat == 1) {
-                            // 좌석이 비어있으면 enable 클래스와 click 리스너를 추가합니다.
-                            $output.addClass('enable').on('click', onClickSeat);
-                        } else {
-                            // 좌석이 사용 불가능하면 disable 클래스를 추가합니다.
-                            $output.addClass('disable');
-                        }
-                    });
-                    // 문서 객체를 추가합니다.
-                    $line.appendTo('body');
+            // console.log(data);
+            // 좌석을 생성합니다.
+            $.each(<%=seats%>, function (indexY, line) {
+                // 문서 객체를 생성합니다.
+                var $line = $('<div></div>').addClass('line');
+                $.each(line, function (indexX, seat) {
+                    // 문서 객체를 생성하고 변수 $line에 추가합니다.
+                    var $output = $('<div></div>', {
+                        'class': 'seat',
+                        'data-x': indexX,
+                        'data-y': indexY
+                    }).appendTo($line);
+                    if (seat == 1) {
+                        // 좌석이 비어있으면 enable 클래스와 click 리스너를 추가합니다.
+                        $output.addClass('enable').on('click', onClickSeat);
+                    } else if(seat == 0){
+                        $output.addClass('none');
+                    }
+                    else {
+                        // 좌석이 사용 불가능하면 disable 클래스를 추가합니다.
+                        $output.addClass('disable');
+                    }
                 });
+                // 문서 객체를 추가합니다.
+                $line.appendTo('#seat');
             });
         });
+
     </script>
 </head>
+<div class="container" style="margin-top: 150px;">
+    <div class="mx-auto" id ="seat">
+
+    </div>
+</div>
 <% include ./basic/footer.ejs %>
