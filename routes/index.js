@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+// var test={}:
+
 var seats = [
   [1, 1, 0, 1, 1],
   [1, 1, 0, 1, 1],
