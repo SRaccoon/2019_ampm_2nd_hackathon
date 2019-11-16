@@ -26,6 +26,8 @@ var server = http.createServer(app);
  */
 
 server.listen(port);
+app.io.attach(server);
+
 server.on('error', onError);
 server.on('listening', onListening);
 

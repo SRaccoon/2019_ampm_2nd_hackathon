@@ -20,6 +20,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
+app.use('/js', express.static(__dirname + '/node_modules/jquery/dist')); // redirect bootstrap JS
 
 
 app.use('/', indexRouter);
@@ -39,6 +40,18 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.io = require('socket.io')();
+// socket setting
+var io = app.io;
+
+io.sockets.on('connection', function (socket) {
+    // reserve 이벤트
+    socket.on('reserve', function (data) {
+        seats[data.y][data.x] = 2;
+        io.sockets.emit('reserve', data);
+    });
 });
 
 module.exports = app;
