@@ -30,7 +30,7 @@ router.get('/intro', function(req, res, next) {
 });
 
 router.get('/payment', function(req, res, next) {
-  res.render('seat');
+  res.render('payment');
 });
 
 router.get('/reserve', function(req, res, next) {
