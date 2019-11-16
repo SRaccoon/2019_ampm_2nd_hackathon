@@ -18,7 +18,7 @@
         .enable {
             background: Gray;
         }
-        
+
         .none {
             background-color: white;
         }
@@ -68,7 +68,7 @@
 
             // console.log(data);
             // 좌석을 생성합니다.
-            $.each(<%=seats%>, function (indexY, line) {
+            $.each(<%=seats %>, function (indexY, line) {
                 // 문서 객체를 생성합니다.
                 var $line = $('<div></div>').addClass('line');
                 $.each(line, function (indexX, seat) {
@@ -81,7 +81,7 @@
                     if (seat == 1) {
                         // 좌석이 비어있으면 enable 클래스와 click 리스너를 추가합니다.
                         $output.addClass('enable').on('click', onClickSeat);
-                    } else if(seat == 0){
+                    } else if (seat == 0) {
                         $output.addClass('none');
                     }
                     else {
@@ -91,14 +91,65 @@
                 });
                 // 문서 객체를 추가합니다.
                 $line.appendTo('#seat');
+                countNum();
             });
         });
+        
+        function countNum(){
+            var _index = 0;
+            <%=seats %>.forEach(function(e){
+                e.forEach(function(temp){
+                    if(temp != 0 && temp != 1){
+                        _index ++;
+                    }
+                })
+            })
+            $("#num").text(_index);
+            $("#price").text(_index*2500);
+        }
 
     </script>
 </head>
 <div class="container" style="margin-top: 150px;">
-    <div class="mx-auto" id ="seat">
-
+    <div class="row">
+        <div class="w-50" id="seat">
+        </div>
+        <div class="w-50">
+            <div class="card">
+                <div class="card-header">예매 정보</div>
+                <div class="m-4">
+                    <div class="row">
+                        <span class="m-3">행선지 : </span>
+                        <div class="m-auto">
+                            <h3>군산</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                            <span class="m-3">소요시간(종착지) : </span>
+                            <div class="m-auto">
+                                <h3>1시간 40분</h3>
+                            </div>
+                        </div>
+                    <div class="row">
+                        <span class="m-3">총 인원 : </span>
+                        <div class="m-auto" id="num">
+                            <h3>0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header">최종 가격</div>
+                <div class="m-4">
+                    <div class="row">
+                        <div class="m-auto">
+                            <h1 class="m-auto" id="price">0</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 </div>
 <% include ./basic/footer.ejs %>
