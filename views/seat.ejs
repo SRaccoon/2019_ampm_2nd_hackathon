@@ -52,17 +52,25 @@
     <script>
         $(document).ready(function () {
             // 변수를 선언합니다.
+
             var onClickSeat = function () {
-                var x = $(this).attr('data-x');
-                var y = $(this).attr('data-y');
-                if (confirm('좌석을 예약하시겠습니까?')) {
-                    $(this).off('click');
-                    socket.emit('reserve', {
-                        x: x,
-                        y: y
-                    });
+
+                var num = countNum();
+                if (num > 2) {
+                    alert("인원초과 입니다.");
                 } else {
-                    alert('취소되었습니다.');
+                    var x = $(this).attr('data-x');
+                    var y = $(this).attr('data-y');
+                    if (confirm('좌석을 예약하시겠습니까?')) {
+                        $(this).off('click');
+                        socket.emit('reserve', {
+                            x: x,
+                            y: y
+                        });
+                        window.location.reload()
+                    } else {
+                        alert('취소되었습니다.');
+                    }
                 }
             };
 
@@ -92,20 +100,23 @@
                 // 문서 객체를 추가합니다.
                 $line.appendTo('#seat');
                 countNum();
-            });
+            }
+            );
         });
-        
-        function countNum(){
+
+        function countNum() {
             var _index = 0;
-            <%=seats %>.forEach(function(e){
-                e.forEach(function(temp){
-                    if(temp != 0 && temp != 1){
-                        _index ++;
+            <%=seats %>.forEach(function (e) {
+                e.forEach(function (temp) {
+                    if (temp != 0 && temp != 1) {
+                        _index++;
                     }
                 })
             })
             $("#num").text(_index);
-            $("#price").text(_index*2500);
+            $("#price").text(_index * 2500);
+
+            return _index;
         }
 
     </script>
@@ -125,15 +136,15 @@
                         </div>
                     </div>
                     <div class="row">
-                            <span class="m-3">소요시간(종착지) : </span>
-                            <div class="m-auto">
-                                <h3>1시간 40분</h3>
-                            </div>
+                        <span class="m-3">소요시간(종착지) : </span>
+                        <div class="m-auto">
+                            <h3>1시간 40분</h3>
                         </div>
+                    </div>
                     <div class="row">
                         <span class="m-3">총 인원 : </span>
-                        <div class="m-auto" id="num">
-                            <h3>0</h3>
+                        <div class="m-auto">
+                            <h3 id="num">0</h3>
                         </div>
                     </div>
                 </div>
@@ -147,6 +158,7 @@
                         </div>
                     </div>
                 </div>
+                <a href="/payment" class="w-25 btn btn-primary mx-auto mb-2">결제</a>
             </div>
         </div>
     </div>
